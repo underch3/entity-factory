@@ -1,0 +1,5 @@
+/Tests/Dummy/app/cache
+/Tests/Dummy/app/logs
+/vendor/
+composer.lock
+.idea

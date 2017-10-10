@@ -1,0 +1,23 @@
+imports:
+    - { resource: '@EntityFactoryBundle/Resources/config/services.yml' }
+
+framework:
+    secret: "1234123412341234"
+
+doctrine:
+    dbal:
+        default_connection: default
+        connections:
+            default:
+                driver: pdo_sqlite
+                memory: true
+
+    orm:
+        naming_strategy: doctrine.orm.naming_strategy.underscore
+        mappings:
+            test_entities:
+                mapping: true
+                type: annotation
+                dir: "%kernel.root_dir%/../TestEntity"
+                prefix: lkovace18\EntityFactoryBundle\Tests\Dummy\TestEntity
+                is_bundle: false

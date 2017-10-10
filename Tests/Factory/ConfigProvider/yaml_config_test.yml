@@ -1,0 +1,9 @@
+Namespace\Class:
+    dubleQuotedString: "dubleQuotedString"
+    singleQuotedString: "singleQuotedString"
+    keepQuotes: faker.randomElement(["foo",'bar'])
+    itIsBoolean: true
+    itIsNumber: 12
+    ItIsArray: ["foo", 'bar']
+
+

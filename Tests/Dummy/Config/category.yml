@@ -1,0 +1,3 @@
+lkovace18\EntityFactoryBundle\Tests\Dummy\TestEntity\Category:
+    name: faker.word
+    parent_id: lkovace18\EntityFactoryBundle\Tests\Dummy\TestEntity\Category

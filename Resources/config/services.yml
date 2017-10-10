@@ -1,0 +1,82 @@
+services:
+    entity_factory:
+        class: lkovace18\EntityFactoryBundle\Factory\Factory
+        arguments:
+            - '@entity_factory.entity_builder'
+            - '@entity_factory.util.value_factory'
+            - '@entity_factory.util.persistence_helper'
+
+    entity_factory.entity_builder:
+        class: lkovace18\EntityFactoryBundle\Factory\EntityBuilder\EntityBuilder
+        public: false
+        arguments:
+            - '@doctrine.orm.entity_manager'
+            - '@entity_factory.config_provider.yaml_config_provider'
+
+    entity_factory.config_provider.config_loader:
+        class: lkovace18\EntityFactoryBundle\Factory\ConfigProvider\ConfigLoader
+        public: false
+        arguments: [{}]
+
+    entity_factory.config_provider.config_generator:
+        class: lkovace18\EntityFactoryBundle\Factory\ConfigProvider\ConfigGenerator
+        public: true
+        arguments:
+            - '@doctrine.orm.entity_manager'
+            - '@entity_factory.util.data_guesser'
+            - '@kernel'
+
+    entity_factory.config_provider.yaml_config_provider:
+        class: lkovace18\EntityFactoryBundle\Factory\ConfigProvider\YamlConfigProvider
+        public: false
+        arguments:
+            - '@entity_factory.config_provider.config_loader'
+
+    entity_factory.data_provider.faker_data_provider:
+        class: lkovace18\EntityFactoryBundle\Factory\DataProvider\FakerDataProvider
+        public: false
+
+    entity_factory.util.value_factory:
+        class: lkovace18\EntityFactoryBundle\Factory\Util\ValueFactory
+        public: false
+        arguments:
+            - '@entity_factory.config_provider.yaml_config_provider'
+            - ['@entity_factory.data_provider.faker_data_provider']
+
+    entity_factory.util.data_guesser:
+        class: lkovace18\EntityFactoryBundle\Factory\Util\DataGuesser
+        public: false
+        arguments:
+            - '@entity_factory.data_provider.faker_data_provider'
+
+    entity_factory.util.persistence_helper:
+        class: lkovace18\EntityFactoryBundle\Factory\Util\PersistenceHelper
+        public: false
+        arguments:
+            - '@doctrine.orm.entity_manager'
+
+    # Commands
+
+    entity_factory.command.seed:
+        class: lkovace18\EntityFactoryBundle\Command\EntityFactorySeedCommand
+        arguments:
+            - '@entity_factory'
+            - '%kernel.root_dir%/seeds/'
+        tags:
+            -  { name: console.command }
+
+    entity_factory.command.seed_entity:
+        class: lkovace18\EntityFactoryBundle\Command\EntityFactorySeedEntityCommand
+        arguments:
+            - '@entity_factory'
+            - '@doctrine.orm.entity_manager'
+        tags:
+            -  { name: console.command }
+
+    entity_factory.command.generate_files:
+        class: lkovace18\EntityFactoryBundle\Command\EntityFactoryGenerateDefinitionsCommand
+        arguments:
+            - '@entity_factory.config_provider.config_generator'
+            - '@kernel'
+        tags:
+            - { name: console.command }

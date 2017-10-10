@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<phpunit bootstrap="./vendor/autoload.php"
+         backupGlobals="false"
+         colors="true">
+    <testsuites>
+        <testsuite name="Entity Factory Bundle">
+            <directory suffix="Test.php">./Tests</directory>
+        </testsuite>
+    </testsuites>
+    <filter>
+        <whitelist addUncoveredFilesFromWhitelist="true">
+            <directory suffix=".php">./Command</directory>
+            <directory suffix=".php">./DependencyInjection</directory>
+            <directory suffix=".php">./Factory</directory>
+        </whitelist>
+    </filter>
+</phpunit>

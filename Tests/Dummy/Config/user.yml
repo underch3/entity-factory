@@ -1,0 +1,8 @@
+lkovace18\EntityFactoryBundle\Tests\Dummy\TestEntity\User:
+    firstName: faker.firstName
+    lastName: faker.lastName
+    email: faker.email
+    dob: faker.dateTimeBetween('-50 years', '-20 years')
+    address: lkovace18\EntityFactoryBundle\Tests\Dummy\TestEntity\Address
+    hobbies: lkovace18\EntityFactoryBundle\Tests\Dummy\TestEntity\Hobby
+    phone: lkovace18\EntityFactoryBundle\Tests\Dummy\TestEntity\Phone
