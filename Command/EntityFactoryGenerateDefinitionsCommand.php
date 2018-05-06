@@ -2,38 +2,38 @@
 
 namespace lkovace18\EntityFactoryBundle\Command;
 
+use Doctrine\ORM\EntityManagerInterface;
 use lkovace18\EntityFactoryBundle\Factory\ConfigProvider\ConfigGenerator;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\HttpKernel\Bundle\Bundle;
 use Symfony\Component\HttpKernel\Kernel;
 use Symfony\Component\Yaml\Dumper;
 
 class EntityFactoryGenerateDefinitionsCommand extends Command
 {
-    /**
-     * @var ConfigGenerator
-     */
+    /** @var ConfigGenerator */
     private $generator;
 
-    /**
-     * @var Kernel
-     */
+    /** @var Kernel */
     private $kernel;
 
-    public function __construct(ConfigGenerator $generator, Kernel $kernel)
+    /** @var EntityManagerInterface */
+    private $entityManager;
+
+    public function __construct(ConfigGenerator $generator, Kernel $kernel, EntityManagerInterface $entityManager)
     {
         parent::__construct();
 
         $this->generator = $generator;
+        $this->entityManager = $entityManager;
         $this->kernel = $kernel;
     }
 
     protected function configure()
     {
         $this
-            ->setName('factory:entity:generate:definitions')
+            ->setName('factory:generate:definitions')
             ->setDescription('It generates the factory definitions for entities.')
         ;
     }
@@ -42,62 +42,50 @@ class EntityFactoryGenerateDefinitionsCommand extends Command
     {
         $output->writeln('Generating definitions for entities...');
 
+        $cmf = $this->entityManager->getMetadataFactory();
+        $metadata = $cmf->getAllMetadata();
         $dumper = new Dumper();
 
-        $bundles = $this->kernel->getBundles();
-        $entitiesDefinition = $this->generator->generate();
+        $entitiesDefinition = $this->generator->generate($metadata);
 
-        /** @var Bundle $bundle */
-        foreach ($bundles as $bundle) {
+        foreach ($entitiesDefinition as $entity => $definition) {
 
-            foreach ($entitiesDefinition as $entity => $definition) {
+            $reflection = new \ReflectionClass($entity);
 
-                /* find entities for current bundle */
-                if (strpos($entity, $bundle->getNamespace()) === false) {
-                    continue;
-                }
+            $factoryDefinitionsDirectory = $this->getDirectory();
 
-                $reflection = new \ReflectionClass($entity);
-                $factoryDefinitionsDirectory = $this->getDirectory($bundle);
+            $definitionFile = $factoryDefinitionsDirectory . $reflection->getShortName() . '.yml';
 
-                $definitionFile = $factoryDefinitionsDirectory . $reflection->getShortName() . '.yml';
+            if (file_exists($factoryDefinitionsDirectory) === false) {
+                // @todo: fix premissions
+                mkdir($factoryDefinitionsDirectory, 0777, true);
+            }
 
-                if ( ! file_exists($factoryDefinitionsDirectory)) {
+            $entityDefinition = $dumper->dump([$entity => $definition], 4);
 
-                    // @todo: fix premissions
-                    mkdir($factoryDefinitionsDirectory, 0777, true);
-                }
+            /* check why this quotes string  */
+            $entityDefinition = str_replace("'", "", $entityDefinition);
 
-                $entityDefinition = $dumper->dump([$entity => $definition], 4);
-
-                /* check why this quotes string  */
-                $entityDefinition = str_replace("'", "", $entityDefinition);
-
-                // @todo: find out how to handle existing files with definition
-                // merge them ?
-                if ( ! file_exists($definitionFile)) {
-                    file_put_contents($definitionFile, $entityDefinition);
-                    $output->writeln(sprintf('<info>Definition created for: %s </info>', $entity));
-                } else {
-                    $output->writeln(sprintf('<info>Definition exist for: %s </info>', $entity));
-                }
-
-
+            // @todo: find out how to handle existing files with definition, merge them ?
+            if (file_exists($definitionFile) === false) {
+                file_put_contents($definitionFile, $entityDefinition);
+                $output->writeln(sprintf('<info>Definition created for: %s </info>', $entity));
+            } else {
+                $output->writeln(sprintf('<info>Definition exist for: %s </info>', $entity));
             }
         }
     }
 
     /**
-     * Find Entity definitions folder for bundle
-     *
-     * @param Bundle $bundle
-     *
      * @return string
      */
-    protected function getDirectory(Bundle $bundle)
+    protected function getDirectory()
     {
-        $path = $bundle->getPath();
+        $path = '';
+        if(empty($this->kernel) === false) {
+            $path = $this->kernel->getRootDir();
+        }
 
-        return $path . '/Resources/EntityDefinitions/';
+        return $path . '/Migrations/EntityDefinitions/';
     }
 }

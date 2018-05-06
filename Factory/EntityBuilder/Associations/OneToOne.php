@@ -46,6 +46,7 @@ class OneToOne extends AbstractRelation
 
     protected function biDirectional()
     {
+
         $data = $this->params->get($this->association);
         $mapping = $this->meta->getAssociationMapping($this->association);
         $assocClass = $this->meta->getAssociationTargetClass($this->association);

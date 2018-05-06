@@ -3,20 +3,16 @@
 namespace lkovace18\EntityFactoryBundle\Factory\DataProvider;
 
 use Faker\Factory;
+use Faker\Generator;
 
 class FakerDataProvider implements DataProviderInterface
 {
-    const REGEX_PROPS   = '/(?<=\$)\w*.*[^\)]$/m';
+    const REGEX_PROPS = '/(?<=\$)\w*.*[^\)]$/m';
     const REGEX_METHODS = '/\w+(?=\()/';
 
-    /**
-     * @var string
-     */
+    /** @var string */
     private $locale;
 
-    /**
-     * @param $locale
-     */
     public function __construct($locale = Factory::DEFAULT_LOCALE)
     {
         $this->locale = $locale;
@@ -25,102 +21,71 @@ class FakerDataProvider implements DataProviderInterface
     /**
      * The string under which faker will be registered
      * as a variable in expression language
-     *
-     * @return string
      */
-    public function getCallableName()
+    public function getCallableName(): string
     {
         return 'faker';
     }
 
     /**
      * Return all callable methods and properties of the library
-     *
-     * @return array
      */
-    public function getProviderCallables()
+    public function getProviderCallables(): array
     {
         // @todo check if all methods are supported for all locales
-        $refl = new \ReflectionClass($this->getProviderInstance());
-        $doc = $refl->getDocComment();
+        $reflection = new \ReflectionClass($this->getProviderInstance());
+        $doc = $reflection->getDocComment();
         preg_match_all(self::REGEX_PROPS, $doc, $properties);
         preg_match_all(self::REGEX_METHODS, $doc, $methods);
 
         return array_merge($properties[0], $methods[0]);
     }
 
-    /**
-     * @return \Faker\Generator
-     */
-    public function getProviderInstance()
+    public function getProviderInstance(): Generator
     {
         $faker = new Factory();
 
         return $faker->create($this->locale);
     }
 
-    /**
-     * @return string
-     */
-    public function getIntegerDefault()
+    public function getIntegerDefault(): string
     {
         return 'randomNumber';
     }
 
-    /**
-     * @return string
-     */
-    public function getSmallIntegerDefault()
+    public function getSmallIntegerDefault(): string
     {
         return 'numberBetween(0, 9)';
     }
 
-    /**
-     * @return string
-     */
-    public function getFloatDefault()
+    public function getFloatDefault(): string
     {
         return 'randomFloat';
     }
 
-    /**
-     * @return string
-     */
-    public function getLongStringDefault()
+    public function getLongStringDefault(): string
     {
         return 'sentence';
     }
 
-    /**
-     * @return string
-     */
-    public function getStringDefault()
+    public function getStringDefault(): string
     {
         return 'word';
     }
 
-    /**
-     * @return string
-     */
-    public function getDateDefault()
+    public function getDateDefault(): string
     {
         return 'dateTimeBetween';
     }
 
-    /**
-     * @return string
-     */
-    public function lexifyString($times)
+    public function lexifyString($times): string
     {
         $wildcards = str_repeat("?", $times);
 
         return 'lexify("' . $wildcards . '")';
     }
 
-    /**
-     * @return string
-     */
-    public function getBooleanDefault()
+    public function getBooleanDefault(): string
     {
         return 'boolean';
     }

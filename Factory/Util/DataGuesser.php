@@ -7,54 +7,37 @@ use lkovace18\EntityFactoryBundle\Factory\DataProvider\FakerDataProvider;
 
 class DataGuesser
 {
-    /**
-     * @var FakerDataProvider
-     */
+    /** @var FakerDataProvider */
     protected $dataProvider;
 
-    /**
-     * DataGuesser constructor.
-     *
-     * @todo exchange for interface or array of providers
-     *
-     * @param FakerDataProvider $faker
-     */
     public function __construct(FakerDataProvider $faker)
     {
+        // @todo exchange for interface or array of providers
         $this->dataProvider = $faker;
     }
 
-    /**
-     * Return an expression for the provider
-     *
-     * @param $mapping
-     *
-     * @return string
-     */
-    public function guess($mapping)
+    /* --------------------------------------------------------
+       |  Return an expression for the provider
+      -------------------------------------------------------- */
+    public function guess($mapping): string
     {
-
         $method = $this->guessByProviderCallables($mapping);
 
         if (empty($method) === true) {
             $method = $this->getByType($mapping);
         }
 
-        if ($mapping['unique'] === true) {
+        if (isset($mapping['unique']) && $mapping['unique'] === true) {
             return $this->dataProvider->getCallableName() . '.unique.' . $method;
         }
 
         return $this->dataProvider->getCallableName() . '.' . $method;
     }
 
-    /**
-     * Try to find a callable that might match
-     *
-     * @param $mapping
-     *
-     * @return string
-     */
-    protected function guessByProviderCallables($mapping)
+    /* --------------------------------------------------------
+       |  Return an expression for the provider
+      -------------------------------------------------------- */
+    protected function guessByProviderCallables($mapping): string
     {
         /* we dont want string, why date provider returns string :( */
         if ($mapping['type'] === 'date' || $mapping['type'] === 'datetime') {
@@ -86,23 +69,18 @@ class DataGuesser
             }
         }
 
-        if ( ! empty($options)) {
+        if (empty($options) === false) {
             return $options[0];
         }
 
         return '';
     }
 
-    /**
-     * Get some defaults
-     *
-     * @param $mapping
-     *
-     * @return string
-     */
+    /* --------------------------------------------------------
+       |  Get some defaults
+      -------------------------------------------------------- */
     protected function getByType($mapping)
     {
-
         switch ($mapping['type']) {
             case 'integer':
             case 'bigint':

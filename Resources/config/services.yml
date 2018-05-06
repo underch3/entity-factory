@@ -1,6 +1,7 @@
 services:
     entity_factory:
         class: lkovace18\EntityFactoryBundle\Factory\Factory
+        public: true
         arguments:
             - '@entity_factory.entity_builder'
             - '@entity_factory.util.value_factory'
@@ -16,7 +17,8 @@ services:
     entity_factory.config_provider.config_loader:
         class: lkovace18\EntityFactoryBundle\Factory\ConfigProvider\ConfigLoader
         public: false
-        arguments: [{}]
+        arguments:
+            - '%kernel.root_dir%/Migrations/EntityDefinitions'
 
     entity_factory.config_provider.config_generator:
         class: lkovace18\EntityFactoryBundle\Factory\ConfigProvider\ConfigGenerator
@@ -78,5 +80,6 @@ services:
         arguments:
             - '@entity_factory.config_provider.config_generator'
             - '@kernel'
+            - '@doctrine.orm.entity_manager'
         tags:
             - { name: console.command }

@@ -4,26 +4,21 @@ namespace lkovace18\EntityFactoryBundle\Factory\ConfigProvider;
 
 class ConfigLoader
 {
-    /**
-     * @var array
-     */
-    private $directories;
+    /** @var string */
+    private $directory;
 
-    public function __construct(array $directories)
+    public function __construct(array $directory)
     {
-        $this->directories = $directories;
+        $this->directory = $directory[0];
     }
 
-    public function getFiles()
+    public function getFiles(): array
     {
         $files = [];
-
-        foreach ($this->directories as $directory) {
-            if ($handle = opendir($directory)) {
-                while (false !== ($entry = readdir($handle))) {
-                    if (substr($entry, -3, 3) == 'yml') {
-                        $files[] = $directory . DIRECTORY_SEPARATOR . $entry;
-                    }
+        if ($handle = opendir($this->directory)) {
+            while (false !== ($entry = readdir($handle))) {
+                if (substr($entry, -3, 3) == 'yml') {
+                    $files[] = $this->directory . DIRECTORY_SEPARATOR . $entry;
                 }
             }
         }

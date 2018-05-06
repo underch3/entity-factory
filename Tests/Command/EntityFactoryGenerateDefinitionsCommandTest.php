@@ -11,12 +11,10 @@ use lkovace18\EntityFactoryBundle\Tests\Dummy\TestEntity\User;
 use org\bovigo\vfs\vfsStream;
 use Symfony\Bundle\FrameworkBundle\Console\Application;
 use Symfony\Component\Console\Tester\CommandTester;
-use Symfony\Component\HttpKernel\Bundle\Bundle;
 use Symfony\Component\Yaml\Yaml;
 
 class EntityFactoryGenerateDefinitionsCommandTest extends TestCase
 {
-    /** @test */
     public function it_generates_config_files()
     {
         $kernel = new AppKernel('test', true);
@@ -29,6 +27,7 @@ class EntityFactoryGenerateDefinitionsCommandTest extends TestCase
             ->setConstructorArgs([
                 $configGenerator,
                 $kernel,
+                $this->em,
             ])
             ->setMethods(['getDirectory'])
             ->getMock()
@@ -61,28 +60,5 @@ class EntityFactoryGenerateDefinitionsCommandTest extends TestCase
 
         $this->assertTrue(isset($userConfig[User::class]['address']));
         $this->assertEquals(Address::class, $userConfig[User::class]['address']);
-    }
-
-    /** @test */
-    public function it_returns_a_config_directory_for_a_bundle()
-    {
-        $bundle = $this->getMockForAbstractClass(Bundle::class, [], '', true, true, true, ['getPath']);
-        $bundle
-            ->expects($this->once())
-            ->method('getPath')
-            ->willReturn('/some/path')
-        ;
-
-        $command = $this->getMockBuilder(EntityFactoryGenerateDefinitionsCommand::class)
-            ->disableOriginalConstructor()
-            ->getMock()
-        ;
-
-        $refl = new \ReflectionClass($command);
-        $method = $refl->getMethod('getDirectory');
-        $method->setAccessible(true);
-        $dir = $method->invokeArgs($command, [$bundle]);
-
-        $this->assertEquals('/some/path/Resources/EntityDefinitions/', $dir);
     }
 }

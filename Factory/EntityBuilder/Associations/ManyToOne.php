@@ -21,8 +21,6 @@ class ManyToOne extends AbstractRelation
             $entity = $data;
         }
 
-        // var_dump('2');
-
         // Create a new entity
         $this->accessor->setValue(
             $this->instance,

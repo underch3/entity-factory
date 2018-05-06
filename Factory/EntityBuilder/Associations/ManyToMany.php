@@ -39,9 +39,6 @@ class ManyToMany extends AbstractRelation
             $this->association
         );
 
-//        var_dump($entity->getId());
-//        die();
-
         $collection[] = $entity;
 
         return $collection;
