@@ -18,16 +18,12 @@ use Symfony\Component\Console\Question\Question;
 class EntityFactorySeedEntityCommand extends Command
 {
     const QUESTION_ENTITY_TO_SEED = 'Select Entity to seed ';
-    const QUESTION_ENTITY_COUNT   = 'How many do you want ? ';
+    const QUESTION_ENTITY_COUNT = 'How many do you want ? ';
 
-    /**
-     * @var Factory
-     */
+    /** @var Factory */
     private $factory;
 
-    /**
-     * @var EntityManager
-     */
+    /** @var EntityManager */
     private $em;
 
     public function __construct(Factory $factory, EntityManager $em)
@@ -41,7 +37,7 @@ class EntityFactorySeedEntityCommand extends Command
     protected function configure()
     {
         $this
-            ->setName('factory:entity:seed')
+            ->setName('factory:seed:entity')
             ->setDescription('Seed an entity')
             ->addArgument(
                 'entity',
@@ -80,9 +76,9 @@ class EntityFactorySeedEntityCommand extends Command
     }
 
     /**
-     * @param InputInterface  $input
+     * @param InputInterface $input
      * @param OutputInterface $output
-     * @param QuestionHelper  $questionHelper
+     * @param QuestionHelper $questionHelper
      *
      * @return string
      */
@@ -110,9 +106,9 @@ class EntityFactorySeedEntityCommand extends Command
     }
 
     /**
-     * @param InputInterface  $input
+     * @param InputInterface $input
      * @param OutputInterface $output
-     * @param QuestionHelper  $questionHelper
+     * @param QuestionHelper $questionHelper
      *
      * @return string
      */

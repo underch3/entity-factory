@@ -7,14 +7,10 @@ use Symfony\Component\Yaml\Parser;
 
 class YamlConfigProvider implements ConfigProviderInterface
 {
-    /**
-     * @var Parser
-     */
+    /** @var Parser */
     private $yaml;
 
-    /**
-     * @var ConfigLoader
-     */
+    /** @var ConfigLoader */
     private $loader;
 
     public function __construct(ConfigLoader $loader)
@@ -53,7 +49,7 @@ class YamlConfigProvider implements ConfigProviderInterface
     }
 
     /**
-     * Unescape the quotes after parsing
+     * Un-escape the quotes after parsing
      *
      * @param $array
      */

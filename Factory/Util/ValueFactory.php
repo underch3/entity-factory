@@ -7,34 +7,24 @@ use Symfony\Component\ExpressionLanguage\ExpressionLanguage;
 
 class ValueFactory
 {
-    /**
-     * @var array
-     */
+    /** var array*/
     protected $config;
 
-    /**
-     * @var ExpressionLanguage
-     */
+    /** var ExpressionLanguage*/
     protected $language;
 
-    /**
-     * @var array
-     */
+    /** var array*/
     protected $providerValues;
 
     public function __construct(ConfigProviderInterface $config, array $dataProviders)
     {
         $this->config = $config->getConfig();
+
         $this->language = new ExpressionLanguage();
         $this->providerValues = $this->getDataProviderValues($dataProviders);
     }
 
-    /**
-     * @param array $dataProviders
-     *
-     * @return array
-     */
-    protected function getDataProviderValues(array $dataProviders)
+    protected function getDataProviderValues(array $dataProviders): array
     {
         $providerValues = [];
 
@@ -45,48 +35,36 @@ class ValueFactory
         return $providerValues;
     }
 
-    /**
-     * Return all values for an Entity
-     *
-     * @param      $entity
-     * @param null $parent
-     *
-     * @return array
-     */
-    public function getAllValues($entity, $parent = null)
+    /* --------------------------------------------------------
+       |  Return all values for an Entity
+      -------------------------------------------------------- */
+    public function getAllValues($entity, $parent = null): array
     {
         $data = [];
 
-        if ( ! isset($this->config[$entity])) {
+        if (isset($this->config[$entity]) === false) {
             return $data;
         }
 
-
         foreach ($this->config[$entity] as $field => $expression) {
+
             if ($parent == $expression) {
                 continue;
             }
-
 
             if (is_string($expression) && class_exists($expression)) {
                 $data[$field] = $this->getAllValues($expression, $entity);
             } else {
                 $data[$field] = $this->getValue($entity, $field);
             }
-
         }
 
         return $data;
     }
 
-    /**
-     * Return the value for an field of an entity
-     *
-     * @param $entity
-     * @param $field
-     *
-     * @return mixed|string
-     */
+    /* --------------------------------------------------------
+       |  Return the value for an field of an entity
+      -------------------------------------------------------- */
     public function getValue($entity, $field)
     {
         $data = $this->config[$entity][$field];
@@ -100,22 +78,11 @@ class ValueFactory
         return $data;
     }
 
-    /**
-     * @param $expression
-     *
-     * @return string
-     */
     protected function evaluateExpression($expression)
     {
-//       / var_dump($expression);die;
         return $this->language->evaluate($expression, $this->providerValues);
     }
 
-    /**
-     * @param $data
-     *
-     * @return mixed
-     */
     protected function evaluateExpressionsInArray($data)
     {
         array_walk_recursive($data, function (&$value) {

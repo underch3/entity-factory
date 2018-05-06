@@ -1,6 +1,5 @@
 <?php
 
-
 namespace lkovace18\EntityFactoryBundle\Factory\EntityBuilder\Associations;
 
 use Dflydev\DotAccessData\Data;
@@ -10,34 +9,22 @@ use Symfony\Component\PropertyAccess\PropertyAccessor;
 
 abstract class AbstractRelation
 {
-    /**
-     * @var PropertyAccessor
-     */
+    /** @var PropertyAccessor */
     protected $accessor;
 
-    /**
-     * @var EntityBuilder
-     */
+    /** @var EntityBuilder */
     protected $entityBuilder;
 
-    /**
-     * @var string
-     */
+    /** @var string */
     protected $association;
 
-    /**
-     * @var ClassMetadataInfo
-     */
+    /** @var ClassMetadataInfo */
     protected $meta;
 
-    /**
-     * @var object
-     */
+    /** @var object */
     protected $instance;
 
-    /**
-     * @var Data
-     */
+    /** @var Data */
     protected $params;
 
     public function __construct(PropertyAccessor $accessor, EntityBuilder $entityBuilder)

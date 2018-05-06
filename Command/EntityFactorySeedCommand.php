@@ -9,17 +9,13 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 class EntityFactorySeedCommand extends Command
 {
-    /**
-     * @var Factory
-     */
+    /** @var Factory */
     private $factory;
 
-    /**
-     * @var
-     */
+    /** @var string */
     private $directory;
 
-    public function __construct(Factory $factory, $directory)
+    public function __construct(Factory $factory, string $directory)
     {
         parent::__construct();
 
@@ -30,7 +26,7 @@ class EntityFactorySeedCommand extends Command
     protected function configure()
     {
         $this
-            ->setName('entity:factory:seed')
+            ->setName('factory:seed')
             ->setDescription('Seeds database')
         ;
     }

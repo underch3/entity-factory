@@ -30,7 +30,7 @@ class EntityFactorySeedEntityCommandTest extends TestCase
         $application = new Application();
         $application->add(new EntityFactorySeedEntityCommand($this->factory, $this->em));
 
-        $this->command = $application->find('factory:entity:seed');
+        $this->command = $application->find('factory:seed:entity');
         $this->commandTester = new CommandTester($this->command);
     }
 

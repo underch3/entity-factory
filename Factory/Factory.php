@@ -9,31 +9,18 @@ use lkovace18\EntityFactoryBundle\Factory\Util\ValueFactory;
 
 class Factory
 {
-    /**
-     * @var int
-     */
+    /** var int */
     protected $times = 1;
 
-    /**
-     * @var EntityBuilder
-     */
+    /** var EntityBuilder */
     private $entityBuilder;
 
-    /**
-     * @var ValueFactory
-     */
+    /** var ValueFactory */
     private $valueFactory;
 
-    /**
-     * @var PersistenceHelper
-     */
+    /** var PersistenceHelper */
     private $persistenceHelper;
 
-    /**
-     * @param EntityBuilder     $entityBuilder
-     * @param ValueFactory      $valueFactory
-     * @param PersistenceHelper $persistenceHelper
-     */
     public function __construct(
         EntityBuilder $entityBuilder,
         ValueFactory $valueFactory,
@@ -44,13 +31,6 @@ class Factory
         $this->persistenceHelper = $persistenceHelper;
     }
 
-    /**
-     * @param               $entity
-     * @param array         $params
-     * @param \Closure|null $callback
-     *
-     * @return array|mixed
-     */
     public function create($entity, array $params = [], \Closure $callback = null)
     {
         $result = $this->make($entity, $params, $callback);
@@ -66,13 +46,6 @@ class Factory
         return $result;
     }
 
-    /**
-     * @param               $entity
-     * @param array         $params
-     * @param \Closure|null $callback
-     *
-     * @return array|mixed
-     */
     public function make($entity, array $params = [], \Closure $callback = null)
     {
         $result = [];
@@ -91,13 +64,7 @@ class Factory
         return count($result) > 1 ? $result : array_pop($result);
     }
 
-    /**
-     * @param       $entity
-     * @param array $params
-     *
-     * @return array
-     */
-    public function values($entity, array $params = [])
+    public function values($entity, array $params = []): array
     {
         $result = [];
         $loops = $this->times;
@@ -112,20 +79,17 @@ class Factory
         return count($result) > 1 ? $result : array_pop($result);
     }
 
-    /**
-     * @param $times
-     *
-     * @return $this
-     */
-    public function times($times)
+    public function times($times): self
     {
         $this->times = $times;
 
         return $this;
     }
 
-    public function setEntityManager(EntityManager $em)
+    public function setEntityManager(EntityManager $em): self
     {
         $this->persistenceHelper->setEntityManager($em);
+
+        return $this;
     }
 }
