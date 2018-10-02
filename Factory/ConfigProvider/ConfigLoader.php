@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types = 1);
 
 namespace lkovace18\EntityFactoryBundle\Factory\ConfigProvider;
 
@@ -7,9 +7,9 @@ class ConfigLoader
     /** @var string */
     private $directory;
 
-    public function __construct(array $directory)
+    public function __construct(string $directory)
     {
-        $this->directory = $directory[0];
+        $this->directory = $directory;
     }
 
     public function getFiles(): array
