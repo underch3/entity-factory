@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types = 1);
 
 namespace lkovace18\EntityFactoryBundle\DependencyInjection;
 
@@ -21,7 +21,7 @@ class EntityFactoryExtension extends Extension
     /**
      * {@inheritdoc}
      */
-    public function load(array $configs, ContainerBuilder $container)
+    public function load(array $configs, ContainerBuilder $container): void
     {
         $configuration = new Configuration();
         $config = $this->processConfiguration($configuration, $configs);
@@ -46,16 +46,8 @@ class EntityFactoryExtension extends Extension
      */
     private function autodetectDirectories(ContainerBuilder $container)
     {
-        $bundles = $container->getParameter('kernel.bundles');
-        $directories = [];
-
-        foreach ($bundles as $name => $class) {
-            $ref = new \ReflectionClass($class);
-            $directory = dirname($ref->getFileName()) . '/Resources/EntityDefinitions';
-            if (file_exists($directory)) {
-                $directories[$ref->getNamespaceName()] = dirname($ref->getFileName()) . '/Resources/EntityDefinitions';
-            }
-        }
+        $projectRoot = $container->getParameter('kernel.project_dir');
+        $directories = $projectRoot . '/EntityDefinitions';
 
         $container
             ->getDefinition('entity_factory.config_provider.config_loader')
