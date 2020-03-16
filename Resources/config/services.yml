@@ -18,7 +18,7 @@ services:
         class: lkovace18\EntityFactoryBundle\Factory\ConfigProvider\ConfigLoader
         public: false
         arguments:
-            - '%kernel.root_dir%/Migrations/EntityDefinitions'
+            - '%kernel.project_dir%/Migrations/EntityDefinitions'
 
     entity_factory.config_provider.config_generator:
         class: lkovace18\EntityFactoryBundle\Factory\ConfigProvider\ConfigGenerator
