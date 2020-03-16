@@ -18,6 +18,6 @@ doctrine:
             test_entities:
                 mapping: true
                 type: annotation
-                dir: "%kernel.root_dir%/../TestEntity"
+                dir: "%kernel.project_dir%/../TestEntity"
                 prefix: lkovace18\EntityFactoryBundle\Tests\Dummy\TestEntity
                 is_bundle: false
