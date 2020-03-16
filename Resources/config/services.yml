@@ -63,7 +63,7 @@ services:
         class: lkovace18\EntityFactoryBundle\Command\EntityFactorySeedCommand
         arguments:
             - '@entity_factory'
-            - '%kernel.root_dir%/seeds/'
+            - '%kernel.project_dir%/seeds/'
         tags:
             -  { name: console.command }
 
