@@ -1,7 +1,7 @@
 {
   "name": "lkovace18/entity-factory-bundle",
   "type": "symfony-bundle",
-  "description": "Entity factory bundle for Symfony 4",
+  "description": "Entity factory bundle for Symfony 5",
   "license": "MIT",
   "authors": [
     {
